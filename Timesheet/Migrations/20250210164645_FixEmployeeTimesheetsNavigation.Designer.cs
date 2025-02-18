@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timesheet.Data;
 
@@ -11,9 +12,11 @@ using Timesheet.Data;
 namespace Timesheet.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    partial class TimesheetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250210164645_FixEmployeeTimesheetsNavigation")]
+    partial class FixEmployeeTimesheetsNavigation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,46 +130,6 @@ namespace Timesheet.Migrations
                     b.ToTable("HRs");
                 });
 
-            modelBuilder.Entity("Timesheet.Models.LeaveDb", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmployeeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StartDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Pending");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Leaves");
-                });
-
             modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
                 {
                     b.Property<int>("Id")
@@ -274,18 +237,18 @@ namespace Timesheet.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442),
+                            CreatedAt = new DateTime(2025, 2, 10, 16, 46, 45, 250, DateTimeKind.Utc).AddTicks(6877),
                             DateOfBirth = new DateOnly(2002, 6, 6),
                             Department = "Admin",
                             Designation = "Admin",
                             Email = "admin@timesheet.com",
                             FullName = "Admin",
                             JoiningDate = new DateOnly(2025, 1, 1),
-                            PasswordHash = new byte[] { 135, 188, 224, 62, 22, 217, 192, 236, 112, 130, 86, 206, 20, 10, 85, 33, 212, 54, 79, 255, 175, 231, 190, 54, 226, 123, 236, 180, 63, 193, 117, 239, 212, 50, 41, 226, 159, 200, 21, 161, 111, 175, 48, 23, 36, 195, 95, 6, 71, 141, 166, 213, 177, 135, 47, 127, 6, 55, 24, 39, 15, 252, 108, 100 },
-                            PasswordSalt = new byte[] { 66, 98, 153, 77, 41, 179, 253, 27, 209, 0, 42, 58, 112, 118, 144, 32, 213, 231, 56, 26, 142, 39, 118, 143, 37, 109, 203, 166, 171, 40, 76, 16, 127, 141, 84, 125, 240, 94, 152, 155, 235, 124, 80, 66, 86, 220, 176, 142, 199, 143, 106, 218, 85, 172, 71, 231, 85, 153, 166, 115, 240, 82, 146, 167, 235, 46, 108, 90, 192, 157, 126, 176, 15, 90, 12, 159, 0, 225, 227, 61, 95, 28, 162, 25, 154, 72, 212, 75, 250, 214, 43, 96, 70, 104, 33, 74, 134, 127, 48, 203, 50, 99, 108, 38, 245, 48, 140, 190, 246, 220, 120, 139, 204, 22, 168, 19, 246, 175, 120, 110, 99, 106, 101, 31, 10, 246, 23, 217 },
+                            PasswordHash = new byte[] { 18, 87, 14, 22, 247, 21, 131, 43, 75, 38, 56, 217, 104, 252, 21, 174, 150, 181, 76, 55, 247, 188, 121, 167, 104, 56, 133, 29, 225, 69, 33, 143, 97, 46, 5, 194, 226, 126, 162, 251, 55, 242, 44, 205, 72, 63, 133, 11, 176, 175, 161, 55, 201, 246, 89, 163, 69, 86, 249, 162, 216, 152, 212, 149 },
+                            PasswordSalt = new byte[] { 70, 153, 106, 14, 163, 171, 109, 192, 63, 113, 201, 20, 163, 43, 182, 114, 94, 165, 40, 60, 215, 180, 205, 24, 181, 93, 46, 31, 232, 43, 109, 149, 154, 254, 228, 131, 7, 107, 182, 84, 141, 35, 248, 171, 48, 66, 233, 218, 228, 110, 144, 140, 246, 46, 106, 153, 133, 237, 148, 132, 123, 105, 160, 7, 97, 129, 177, 113, 77, 82, 66, 81, 97, 86, 89, 184, 226, 222, 172, 15, 125, 232, 168, 68, 22, 226, 114, 75, 196, 149, 3, 149, 119, 136, 104, 204, 37, 26, 169, 55, 199, 19, 255, 175, 219, 71, 200, 202, 84, 168, 85, 254, 29, 110, 209, 215, 73, 137, 72, 162, 34, 9, 187, 32, 113, 219, 222, 75 },
                             PhoneNumber = "9876543456",
                             Role = "Admin",
-                            UpdatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442)
+                            UpdatedAt = new DateTime(2025, 2, 10, 16, 46, 45, 250, DateTimeKind.Utc).AddTicks(6878)
                         });
                 });
 
@@ -311,17 +274,6 @@ namespace Timesheet.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Timesheet.Models.LeaveDb", b =>
-                {
-                    b.HasOne("Timesheet.Models.Employee", "Employee")
-                        .WithMany("LeaveRequests")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
                 {
                     b.HasOne("Timesheet.Models.Employee", "Employee")
@@ -335,8 +287,6 @@ namespace Timesheet.Migrations
 
             modelBuilder.Entity("Timesheet.Models.Employee", b =>
                 {
-                    b.Navigation("LeaveRequests");
-
                     b.Navigation("Timesheets");
                 });
 #pragma warning restore 612, 618

@@ -22,12 +22,12 @@ namespace Timesheet.Services
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == dto.UserId);
             if (user == null) return false; // User not found
 
-            if (user.Role != "Unassigned") return false; // Prevent reassigning roles
+            if (user.Role != "Unassigned" ) return false; // Prevent reassigning roles
 
             user.Role = dto.Role;
             await _context.SaveChangesAsync();
 
-            // ✅ Create entry in Employee or HR table
+           
             if (dto.Role == "Employee")
             {
                 var employee = new Employee
@@ -35,7 +35,8 @@ namespace Timesheet.Services
                     UserId = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
-                    Department = user.Department
+                    Department = user.Department,
+                    Designation = user.Designation // ✅ Assign designation
                 };
                 _context.Employees.Add(employee);
             }
@@ -46,12 +47,26 @@ namespace Timesheet.Services
                     UserId = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
-                    Department = user.Department
+                    Department = user.Department,
+                    Designation = user.Designation // ✅ Assign designation
                 };
                 _context.HRs.Add(hr);
             }
+            else if (dto.Role == "Admin") // ✅ Handling Admin role
+            {
+                var admin = new Admins
+                {
+                    UserId = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Department = user.Department,
+                   
+                };
+                _context.Admins.Add(admin);
+            }
 
             await _context.SaveChangesAsync();
+
             return true;
         }
     }

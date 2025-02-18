@@ -8,6 +8,7 @@ using Timesheet.Data;
 using Timesheet.Interfaces;
 using Timesheet.Repositories;
 using Timesheet.Services;
+using Timesheet.Service;
 
 namespace Timesheet
 {
@@ -88,6 +89,12 @@ namespace Timesheet
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddTransient<IAuthService, AuthService>();
             builder.Services.AddScoped<IRoleService, RoleService>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<ITimesheetRepository, TimesheetRepository>();
+            builder.Services.AddScoped<ITimesheetService, TimesheetService>();
+            builder.Services.AddScoped<IHRRepository, HRRepository>();
+            builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
+            builder.Services.AddScoped<ILeaveService, LeaveService>();
 
 
             // Add Swagger for API documentation

@@ -12,8 +12,8 @@ using Timesheet.Data;
 namespace Timesheet.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    [Migration("20250207053651_AddEmployeeAndHRTables")]
-    partial class AddEmployeeAndHRTables
+    [Migration("20250210164831_ConvertEnumToString")]
+    partial class ConvertEnumToString
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Timesheet.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Timesheet.Models.Employee", b =>
+            modelBuilder.Entity("Timesheet.Models.Admins", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,12 +45,52 @@ namespace Timesheet.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Admins");
+                });
+
+            modelBuilder.Entity("Timesheet.Models.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Designation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Employees");
                 });
@@ -67,6 +107,10 @@ namespace Timesheet.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Designation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -80,9 +124,50 @@ namespace Timesheet.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("HRs");
+                });
+
+            modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HoursWorked")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Pending");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Timesheets");
                 });
 
             modelBuilder.Entity("Timesheet.Models.User", b =>
@@ -100,6 +185,11 @@ namespace Timesheet.Migrations
                         .HasColumnType("date");
 
                     b.Property<string>("Department")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Designation")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -147,25 +237,26 @@ namespace Timesheet.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 7, 5, 36, 50, 678, DateTimeKind.Utc).AddTicks(3648),
+                            CreatedAt = new DateTime(2025, 2, 10, 16, 48, 31, 415, DateTimeKind.Utc).AddTicks(9471),
                             DateOfBirth = new DateOnly(2002, 6, 6),
                             Department = "Admin",
+                            Designation = "Admin",
                             Email = "admin@timesheet.com",
                             FullName = "Admin",
                             JoiningDate = new DateOnly(2025, 1, 1),
-                            PasswordHash = new byte[] { 55, 138, 186, 23, 91, 218, 231, 36, 129, 107, 136, 185, 93, 61, 137, 56, 141, 230, 238, 117, 65, 181, 198, 247, 70, 52, 117, 74, 232, 113, 140, 239, 116, 110, 21, 88, 244, 31, 140, 13, 57, 250, 128, 14, 44, 128, 48, 155, 254, 174, 52, 19, 180, 165, 239, 252, 66, 195, 145, 238, 96, 62, 122, 107 },
-                            PasswordSalt = new byte[] { 137, 165, 225, 207, 166, 88, 241, 95, 89, 130, 24, 139, 176, 221, 247, 45, 36, 233, 213, 39, 103, 96, 30, 32, 203, 173, 107, 138, 104, 138, 6, 132, 95, 40, 240, 69, 107, 182, 101, 209, 184, 169, 138, 170, 102, 228, 225, 69, 5, 100, 32, 116, 51, 163, 251, 162, 42, 177, 99, 200, 185, 57, 142, 117, 112, 173, 173, 196, 167, 39, 77, 180, 186, 114, 112, 1, 71, 23, 24, 230, 176, 57, 182, 179, 135, 140, 60, 188, 224, 233, 154, 101, 185, 116, 46, 198, 254, 177, 94, 232, 13, 52, 15, 139, 139, 232, 145, 164, 119, 220, 169, 177, 99, 147, 45, 47, 32, 98, 104, 137, 155, 221, 155, 94, 193, 237, 182, 172 },
+                            PasswordHash = new byte[] { 193, 99, 242, 247, 201, 61, 229, 68, 144, 112, 89, 178, 42, 160, 229, 67, 6, 209, 233, 41, 8, 134, 28, 163, 41, 124, 106, 205, 224, 197, 242, 217, 158, 237, 193, 62, 127, 254, 23, 221, 162, 86, 77, 184, 170, 45, 153, 173, 58, 125, 69, 162, 197, 14, 80, 83, 10, 177, 21, 137, 82, 131, 3, 91 },
+                            PasswordSalt = new byte[] { 217, 54, 121, 205, 66, 96, 135, 236, 240, 148, 125, 221, 59, 237, 214, 27, 88, 175, 130, 218, 154, 114, 137, 142, 165, 48, 254, 20, 81, 51, 184, 85, 172, 91, 66, 232, 119, 5, 64, 142, 131, 171, 67, 227, 99, 123, 11, 85, 229, 193, 1, 4, 92, 142, 122, 207, 238, 5, 181, 207, 232, 31, 101, 225, 152, 71, 191, 130, 49, 34, 81, 224, 70, 242, 82, 53, 47, 225, 165, 57, 59, 127, 7, 69, 222, 254, 97, 54, 215, 210, 191, 165, 38, 213, 198, 195, 183, 251, 238, 206, 85, 114, 83, 84, 122, 94, 235, 240, 186, 4, 219, 164, 176, 240, 92, 13, 4, 67, 129, 64, 121, 76, 42, 136, 135, 19, 195, 112 },
                             PhoneNumber = "9876543456",
                             Role = "Admin",
-                            UpdatedAt = new DateTime(2025, 2, 7, 5, 36, 50, 678, DateTimeKind.Utc).AddTicks(3648)
+                            UpdatedAt = new DateTime(2025, 2, 10, 16, 48, 31, 415, DateTimeKind.Utc).AddTicks(9472)
                         });
                 });
 
             modelBuilder.Entity("Timesheet.Models.Employee", b =>
                 {
                     b.HasOne("Timesheet.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("Timesheet.Models.Employee", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -175,12 +266,28 @@ namespace Timesheet.Migrations
             modelBuilder.Entity("Timesheet.Models.HR", b =>
                 {
                     b.HasOne("Timesheet.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("Timesheet.Models.HR", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
+                {
+                    b.HasOne("Timesheet.Models.Employee", "Employee")
+                        .WithMany("Timesheets")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Timesheet.Models.Employee", b =>
+                {
+                    b.Navigation("Timesheets");
                 });
 #pragma warning restore 612, 618
         }

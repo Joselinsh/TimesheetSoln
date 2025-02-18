@@ -38,7 +38,10 @@ namespace Timesheet.Models
         [StringLength(100)]
         public string Department { get; set; } = string.Empty;
 
-      
+        [StringLength(100)]
+        public string Designation { get; set; }=string.Empty;
+
+
         public DateOnly? JoiningDate { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

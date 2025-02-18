@@ -41,6 +41,7 @@ namespace Timesheet.Services
                 DateOfBirth = userregistrationDto.DateOfBirth,
                 Department = userregistrationDto.Department,
                 JoiningDate = userregistrationDto.JoiningDate,
+                Designation=userregistrationDto.Designation,
                 Role = "Unassigned" // Default role
             };
 
@@ -49,6 +50,7 @@ namespace Timesheet.Services
 
             return new UserRegistrationResponseDto
             {
+                
                 Id = user.Id,
                 FullName = user.FullName,
                 Email = user.Email,
@@ -56,7 +58,9 @@ namespace Timesheet.Services
                 PhoneNumber = user.PhoneNumber,
                 DateOfBirth = user.DateOfBirth,
                 Department = user.Department,
-                JoiningDate = user.JoiningDate
+                JoiningDate = user.JoiningDate,
+                Designation=user.Designation,
+                Message = $"Welcome {user.FullName}, you have registered successfully!"
             };
         }
 
@@ -72,7 +76,7 @@ namespace Timesheet.Services
             if (!computedHash.SequenceEqual(user.PasswordHash))
                 throw new Exception("Invalid password.");
 
-            // Check if the user's role is assigned
+         
             if (user.Role == "Unassigned")
             {
                 return new LoginResponseDto
@@ -82,18 +86,19 @@ namespace Timesheet.Services
                 };
             }
 
-            // 🔥 Ensure JWT Secret Key is loaded properly
+           
             var secretKey = _configuration["Jwt:Secret"];
             if (string.IsNullOrEmpty(secretKey))
                 throw new Exception("JWT Secret Key is missing in configuration.");
 
             var key = Encoding.UTF8.GetBytes(secretKey);
 
-            // ✅ Add Role, Email, and ID claims properly
+           
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
+                  
                 new Claim(ClaimTypes.Role, user.Role)
             };
 

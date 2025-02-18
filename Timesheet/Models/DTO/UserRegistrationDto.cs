@@ -26,7 +26,11 @@ namespace Timesheet.Models.DTO
         [StringLength(100)]
         public string Department { get; set; }
 
-      
+        [StringLength(100)]
+        public string Designation { get; set; }
+
+
+
         public DateOnly? JoiningDate { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timesheet.Data;
 
@@ -11,9 +12,11 @@ using Timesheet.Data;
 namespace Timesheet.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    partial class TimesheetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250209215957_updatetimesheetdbtable")]
+    partial class updatetimesheetdbtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,46 +130,6 @@ namespace Timesheet.Migrations
                     b.ToTable("HRs");
                 });
 
-            modelBuilder.Entity("Timesheet.Models.LeaveDb", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("EmployeeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StartDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Pending");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Leaves");
-                });
-
             modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
                 {
                     b.Property<int>("Id")
@@ -194,11 +157,10 @@ namespace Timesheet.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Pending");
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
@@ -274,26 +236,26 @@ namespace Timesheet.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442),
+                            CreatedAt = new DateTime(2025, 2, 9, 21, 59, 57, 19, DateTimeKind.Utc).AddTicks(8448),
                             DateOfBirth = new DateOnly(2002, 6, 6),
                             Department = "Admin",
                             Designation = "Admin",
                             Email = "admin@timesheet.com",
                             FullName = "Admin",
                             JoiningDate = new DateOnly(2025, 1, 1),
-                            PasswordHash = new byte[] { 135, 188, 224, 62, 22, 217, 192, 236, 112, 130, 86, 206, 20, 10, 85, 33, 212, 54, 79, 255, 175, 231, 190, 54, 226, 123, 236, 180, 63, 193, 117, 239, 212, 50, 41, 226, 159, 200, 21, 161, 111, 175, 48, 23, 36, 195, 95, 6, 71, 141, 166, 213, 177, 135, 47, 127, 6, 55, 24, 39, 15, 252, 108, 100 },
-                            PasswordSalt = new byte[] { 66, 98, 153, 77, 41, 179, 253, 27, 209, 0, 42, 58, 112, 118, 144, 32, 213, 231, 56, 26, 142, 39, 118, 143, 37, 109, 203, 166, 171, 40, 76, 16, 127, 141, 84, 125, 240, 94, 152, 155, 235, 124, 80, 66, 86, 220, 176, 142, 199, 143, 106, 218, 85, 172, 71, 231, 85, 153, 166, 115, 240, 82, 146, 167, 235, 46, 108, 90, 192, 157, 126, 176, 15, 90, 12, 159, 0, 225, 227, 61, 95, 28, 162, 25, 154, 72, 212, 75, 250, 214, 43, 96, 70, 104, 33, 74, 134, 127, 48, 203, 50, 99, 108, 38, 245, 48, 140, 190, 246, 220, 120, 139, 204, 22, 168, 19, 246, 175, 120, 110, 99, 106, 101, 31, 10, 246, 23, 217 },
+                            PasswordHash = new byte[] { 81, 19, 184, 214, 52, 85, 121, 248, 86, 17, 216, 217, 99, 131, 7, 119, 162, 44, 100, 39, 51, 59, 166, 186, 72, 62, 128, 126, 82, 135, 83, 239, 209, 29, 92, 223, 61, 209, 67, 104, 182, 50, 62, 201, 242, 72, 5, 158, 34, 191, 197, 27, 7, 100, 69, 116, 152, 17, 217, 170, 209, 97, 246, 207 },
+                            PasswordSalt = new byte[] { 155, 29, 92, 244, 27, 44, 79, 30, 198, 239, 106, 21, 6, 208, 44, 230, 133, 127, 213, 158, 21, 21, 121, 208, 9, 211, 234, 160, 10, 183, 5, 114, 123, 30, 150, 46, 27, 2, 26, 51, 255, 218, 113, 37, 190, 109, 63, 158, 5, 221, 195, 62, 180, 52, 139, 74, 2, 140, 87, 254, 249, 67, 241, 61, 89, 212, 105, 239, 167, 58, 200, 143, 2, 30, 90, 100, 147, 39, 214, 201, 29, 11, 153, 134, 101, 167, 59, 182, 0, 233, 119, 205, 114, 10, 255, 209, 67, 67, 79, 227, 158, 115, 116, 61, 184, 174, 70, 93, 185, 121, 162, 137, 59, 18, 67, 126, 4, 161, 242, 118, 39, 126, 238, 221, 130, 228, 130, 164 },
                             PhoneNumber = "9876543456",
                             Role = "Admin",
-                            UpdatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442)
+                            UpdatedAt = new DateTime(2025, 2, 9, 21, 59, 57, 19, DateTimeKind.Utc).AddTicks(8449)
                         });
                 });
 
             modelBuilder.Entity("Timesheet.Models.Employee", b =>
                 {
                     b.HasOne("Timesheet.Models.User", "User")
-                        .WithOne()
-                        .HasForeignKey("Timesheet.Models.Employee", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -303,41 +265,23 @@ namespace Timesheet.Migrations
             modelBuilder.Entity("Timesheet.Models.HR", b =>
                 {
                     b.HasOne("Timesheet.Models.User", "User")
-                        .WithOne()
-                        .HasForeignKey("Timesheet.Models.HR", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Timesheet.Models.LeaveDb", b =>
-                {
-                    b.HasOne("Timesheet.Models.Employee", "Employee")
-                        .WithMany("LeaveRequests")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
             modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
                 {
                     b.HasOne("Timesheet.Models.Employee", "Employee")
-                        .WithMany("Timesheets")
+                        .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Timesheet.Models.Employee", b =>
-                {
-                    b.Navigation("LeaveRequests");
-
-                    b.Navigation("Timesheets");
                 });
 #pragma warning restore 612, 618
         }

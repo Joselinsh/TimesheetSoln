@@ -21,7 +21,7 @@ namespace Timesheet.Controllers
         }
 
         [HttpPost("register")]
-        [AllowAnonymous] // ✅ Explicitly allow registration for all users
+        [AllowAnonymous] 
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userregistrationDto)
         {
             try
@@ -36,8 +36,9 @@ namespace Timesheet.Controllers
             }
         }
 
+
         [HttpPost("login")]
-        [AllowAnonymous] // ✅ Explicitly allow login for all users
+        [AllowAnonymous] 
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
         {
             try
@@ -45,13 +46,13 @@ namespace Timesheet.Controllers
                 var response = await _authService.LoginAsync(loginDto);
 
                 if (response == null)
-                    return Unauthorized(new { error = "Invalid email or password" }); // ✅ Use Unauthorized for incorrect login
+                    return Unauthorized(new { error = "Invalid email or password" }); 
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[ERROR] Login: {ex}"); // ✅ Log full exception details
+                Console.WriteLine($"[ERROR] Login: {ex}"); 
                 return BadRequest(new { error = "Login failed. Please try again later." });
             }
         }

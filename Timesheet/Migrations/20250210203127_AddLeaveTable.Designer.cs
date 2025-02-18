@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timesheet.Data;
 
@@ -11,9 +12,11 @@ using Timesheet.Data;
 namespace Timesheet.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    partial class TimesheetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250210203127_AddLeaveTable")]
+    partial class AddLeaveTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,17 +145,15 @@ namespace Timesheet.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EndDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Reason")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StartDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -274,18 +275,18 @@ namespace Timesheet.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442),
+                            CreatedAt = new DateTime(2025, 2, 10, 20, 31, 27, 136, DateTimeKind.Utc).AddTicks(5514),
                             DateOfBirth = new DateOnly(2002, 6, 6),
                             Department = "Admin",
                             Designation = "Admin",
                             Email = "admin@timesheet.com",
                             FullName = "Admin",
                             JoiningDate = new DateOnly(2025, 1, 1),
-                            PasswordHash = new byte[] { 135, 188, 224, 62, 22, 217, 192, 236, 112, 130, 86, 206, 20, 10, 85, 33, 212, 54, 79, 255, 175, 231, 190, 54, 226, 123, 236, 180, 63, 193, 117, 239, 212, 50, 41, 226, 159, 200, 21, 161, 111, 175, 48, 23, 36, 195, 95, 6, 71, 141, 166, 213, 177, 135, 47, 127, 6, 55, 24, 39, 15, 252, 108, 100 },
-                            PasswordSalt = new byte[] { 66, 98, 153, 77, 41, 179, 253, 27, 209, 0, 42, 58, 112, 118, 144, 32, 213, 231, 56, 26, 142, 39, 118, 143, 37, 109, 203, 166, 171, 40, 76, 16, 127, 141, 84, 125, 240, 94, 152, 155, 235, 124, 80, 66, 86, 220, 176, 142, 199, 143, 106, 218, 85, 172, 71, 231, 85, 153, 166, 115, 240, 82, 146, 167, 235, 46, 108, 90, 192, 157, 126, 176, 15, 90, 12, 159, 0, 225, 227, 61, 95, 28, 162, 25, 154, 72, 212, 75, 250, 214, 43, 96, 70, 104, 33, 74, 134, 127, 48, 203, 50, 99, 108, 38, 245, 48, 140, 190, 246, 220, 120, 139, 204, 22, 168, 19, 246, 175, 120, 110, 99, 106, 101, 31, 10, 246, 23, 217 },
+                            PasswordHash = new byte[] { 173, 166, 211, 55, 41, 73, 219, 154, 230, 97, 17, 33, 172, 110, 196, 101, 89, 75, 247, 148, 200, 23, 184, 136, 164, 99, 197, 38, 170, 61, 26, 127, 137, 238, 94, 18, 125, 39, 53, 33, 45, 66, 29, 7, 76, 243, 174, 29, 22, 191, 20, 130, 74, 122, 42, 104, 217, 71, 221, 85, 210, 182, 131, 173 },
+                            PasswordSalt = new byte[] { 172, 169, 88, 154, 75, 85, 215, 122, 247, 162, 85, 218, 58, 176, 176, 242, 234, 228, 9, 22, 124, 25, 124, 8, 37, 120, 150, 249, 237, 239, 35, 80, 210, 74, 35, 109, 253, 70, 241, 150, 232, 3, 242, 124, 229, 89, 79, 52, 48, 136, 130, 184, 123, 41, 145, 191, 88, 97, 153, 156, 194, 150, 3, 187, 118, 21, 131, 218, 109, 89, 185, 76, 10, 82, 94, 189, 132, 226, 160, 23, 98, 245, 50, 101, 12, 184, 166, 40, 141, 76, 5, 215, 38, 27, 180, 86, 53, 188, 52, 141, 141, 219, 217, 107, 129, 97, 15, 4, 149, 146, 248, 156, 81, 52, 115, 125, 122, 87, 128, 49, 146, 161, 17, 22, 118, 139, 190, 124 },
                             PhoneNumber = "9876543456",
                             Role = "Admin",
-                            UpdatedAt = new DateTime(2025, 2, 10, 20, 50, 3, 85, DateTimeKind.Utc).AddTicks(9442)
+                            UpdatedAt = new DateTime(2025, 2, 10, 20, 31, 27, 136, DateTimeKind.Utc).AddTicks(5515)
                         });
                 });
 

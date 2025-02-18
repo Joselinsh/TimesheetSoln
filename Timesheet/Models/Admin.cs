@@ -3,15 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Timesheet.Models
 {
-    public class Employee
+    public class Admins
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public User User { get; set; } // Navigation property
 
         [Required]
         public string FullName { get; set; }
@@ -19,13 +17,9 @@ namespace Timesheet.Models
         [Required, EmailAddress]
         public string Email { get; set; }
 
-        public string Department { get; set; }
+        public string PhoneNumber { get; set; }
 
-        public string Designation { get; set; }
-
-        public ICollection<TimesheetDb> Timesheets { get; set; } = new List<TimesheetDb>();
-
-        public ICollection<LeaveDb> LeaveRequests { get; set; } = new List<LeaveDb>(); // Add this line
+        [Required]
+        public string Department { get; set; } // Store department info
     }
 }
-
