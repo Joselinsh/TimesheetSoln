@@ -13,7 +13,7 @@ namespace Timesheet.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<HR> HRs { get; set; }
-
+          
         public DbSet<TimesheetDb> Timesheets { get; set; }
 
 
@@ -98,8 +98,8 @@ namespace Timesheet.Data
                 .HasIndex(l => l.EmployeeId);
 
             // Timesheet Properties
-            modelBuilder.Entity<TimesheetDb>().HasKey(t => t.Id);
-            modelBuilder.Entity<TimesheetDb>().Property(t => t.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<TimesheetDb>().HasKey(t => t.TimesheetId);
+            modelBuilder.Entity<TimesheetDb>().Property(t => t.TimesheetId).ValueGeneratedOnAdd();
             modelBuilder.Entity<TimesheetDb>().Property(t => t.EmployeeId).IsRequired();
             modelBuilder.Entity<TimesheetDb>().Property(t => t.ProjectName).HasMaxLength(100).IsRequired();
             modelBuilder.Entity<TimesheetDb>().Property(t => t.HoursWorked).IsRequired();
@@ -119,9 +119,9 @@ namespace Timesheet.Data
                 .HasColumnType("varbinary(max)");
 
             modelBuilder.Entity<TimesheetDb>()
-               .HasKey(t => t.Id);
+               .HasKey(t => t.TimesheetId);
             modelBuilder.Entity<TimesheetDb>()
-                .Property(t => t.Id)
+                .Property(t => t.TimesheetId)
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<TimesheetDb>()
@@ -157,6 +157,7 @@ namespace Timesheet.Data
                 new User
                 {
                     Id = 1,
+                  
                     FullName = "Admin",
                     Email = "admin@timesheet.com",
                     PasswordHash = passwordHash,

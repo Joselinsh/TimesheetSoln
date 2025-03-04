@@ -3,6 +3,7 @@ using Timesheet.Interfaces;
 using Timesheet.Models;
 using Microsoft.EntityFrameworkCore;
 using Timesheet.Models.DTO;
+using Timesheet.Enum;
 
 
 namespace Timesheet.Repositories
@@ -55,7 +56,7 @@ namespace Timesheet.Repositories
             timesheet.ProjectName = dto.ProjectName;
             timesheet.Date = dto.Date;
             timesheet.HoursWorked = dto.HoursWorked;
-           
+
 
             await _context.SaveChangesAsync();
             return timesheet;
@@ -70,9 +71,18 @@ namespace Timesheet.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+       public async Task<List<TimesheetDb>> GetPendingTimesheets()
+{
+    return await _context.Timesheets
+        .Where(ts => ts.Status == TimesheetStatus.Pending) // ✅ Use Enum value, not string
+        .Include(l => l.Employee)
+        .ToListAsync();
+}
+
     }
 }
 
-    
+
 
 

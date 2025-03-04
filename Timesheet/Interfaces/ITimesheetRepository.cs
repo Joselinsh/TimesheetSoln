@@ -1,4 +1,5 @@
 ﻿using Timesheet.Models;
+using Timesheet.Models.DTO;
 
 namespace Timesheet.Interfaces
 {
@@ -12,6 +13,8 @@ namespace Timesheet.Interfaces
         Task<bool> DeleteTimesheet(int timesheetId);
 
         Task<List<TimesheetDb>> GetTimesheetsByEmployeeId(int employeeId);
+
+        Task<List<TimesheetDb>> GetPendingTimesheets();
 
     }
 }

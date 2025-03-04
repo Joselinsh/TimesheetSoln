@@ -35,7 +35,7 @@ namespace Timesheet.Service
 
             var leaveRequest = new LeaveDb
             {
-                EmployeeId = employee.Id,
+                EmployeeId = employee.EmployeeId,
                 EmployeeName = employee.FullName,
                 StartDate = dto.StartDate,
                 EndDate = dto.EndDate,
@@ -115,6 +115,54 @@ namespace Timesheet.Service
 
             return leaveDtos;
         }
+
+        public async Task<LeaveResponseDto> UpdateLeave(int leaveId, UpdateLeaveDto dto, int userId)
+        {
+            var employee = await _employeeRepository.GetByUserId(userId);
+            if (employee == null) throw new Exception("Employee not found");
+
+            var leave = await _leaveRepository.GetLeaveById(leaveId);
+            if (leave == null) throw new Exception("Leave request not found");
+
+            if (leave.EmployeeId != employee.EmployeeId)
+                throw new Exception("You can only update your own leave requests.");
+
+            if (leave.Status != LeaveStatus.Pending)
+                return null; // ✅ Reject update if not Pending
+
+            leave.StartDate = dto.StartDate;
+            leave.EndDate = dto.EndDate;
+            leave.Reason = dto.Reason;
+
+            await _leaveRepository.UpdateLeaveRequest(leave);
+
+            return new LeaveResponseDto
+            {
+                Id = leave.Id,
+                EmployeeName = employee.FullName,
+                StartDate = leave.StartDate,
+                EndDate = leave.EndDate,
+                Status = leave.Status.ToString()
+            };
+        }
+
+        public async Task<bool> DeleteLeave(int leaveId, int userId)
+        {
+            var employee = await _employeeRepository.GetByUserId(userId);
+            if (employee == null) throw new Exception("Employee not found");
+
+            var leave = await _leaveRepository.GetLeaveById(leaveId);
+            if (leave == null) return false;
+
+            if (leave.EmployeeId != employee.EmployeeId)
+                throw new Exception("You can only delete your own leave requests.");
+
+            if (leave.Status != LeaveStatus.Pending)
+                return false; // ✅ Reject delete if not Pending
+
+            return await _leaveRepository.DeleteLeaveRequest(leaveId);
+        }
+
     }
 }
 

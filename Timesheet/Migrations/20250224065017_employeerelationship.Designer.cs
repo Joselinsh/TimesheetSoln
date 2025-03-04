@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Timesheet.Data;
 
@@ -11,9 +12,11 @@ using Timesheet.Data;
 namespace Timesheet.Migrations
 {
     [DbContext(typeof(TimesheetDbContext))]
-    partial class TimesheetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250224065017_employeerelationship")]
+    partial class employeerelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,11 +62,11 @@ namespace Timesheet.Migrations
 
             modelBuilder.Entity("Timesheet.Models.Employee", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Department")
                         .IsRequired()
@@ -84,7 +87,7 @@ namespace Timesheet.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("EmployeeId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -169,11 +172,11 @@ namespace Timesheet.Migrations
 
             modelBuilder.Entity("Timesheet.Models.TimesheetDb", b =>
                 {
-                    b.Property<int>("TimesheetId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TimesheetId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
@@ -200,7 +203,7 @@ namespace Timesheet.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasDefaultValue("Pending");
 
-                    b.HasKey("TimesheetId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
 
@@ -274,18 +277,18 @@ namespace Timesheet.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 2, 24, 7, 50, 39, 265, DateTimeKind.Utc).AddTicks(5581),
+                            CreatedAt = new DateTime(2025, 2, 24, 6, 50, 16, 475, DateTimeKind.Utc).AddTicks(2940),
                             DateOfBirth = new DateOnly(2002, 6, 6),
                             Department = "Admin",
                             Designation = "Admin",
                             Email = "admin@timesheet.com",
                             FullName = "Admin",
                             JoiningDate = new DateOnly(2025, 1, 1),
-                            PasswordHash = new byte[] { 25, 123, 53, 56, 97, 163, 56, 150, 169, 142, 238, 2, 41, 245, 57, 35, 9, 46, 191, 180, 87, 71, 112, 252, 209, 137, 158, 179, 140, 7, 145, 90, 49, 111, 226, 21, 148, 171, 115, 134, 161, 51, 62, 14, 98, 15, 149, 193, 103, 59, 79, 11, 39, 226, 169, 29, 211, 203, 39, 154, 224, 241, 218, 110 },
-                            PasswordSalt = new byte[] { 195, 50, 149, 181, 20, 57, 237, 244, 130, 88, 242, 252, 170, 197, 100, 222, 59, 120, 70, 211, 224, 61, 155, 108, 64, 139, 130, 0, 13, 248, 75, 186, 165, 148, 205, 216, 144, 136, 195, 254, 205, 41, 226, 121, 13, 44, 228, 125, 150, 53, 93, 216, 143, 241, 28, 229, 110, 24, 116, 108, 216, 85, 93, 252, 211, 192, 226, 139, 130, 177, 177, 20, 24, 99, 134, 114, 20, 112, 229, 1, 102, 222, 112, 87, 147, 74, 170, 41, 249, 5, 160, 96, 211, 182, 246, 13, 70, 234, 54, 176, 116, 108, 210, 241, 75, 162, 105, 61, 62, 86, 136, 64, 120, 248, 81, 251, 63, 238, 18, 45, 181, 234, 230, 218, 60, 230, 215, 232 },
+                            PasswordHash = new byte[] { 181, 107, 228, 144, 1, 252, 25, 215, 122, 207, 95, 13, 146, 181, 142, 143, 58, 167, 91, 34, 131, 140, 3, 34, 73, 170, 77, 141, 211, 70, 228, 165, 66, 157, 166, 82, 29, 155, 20, 18, 223, 134, 67, 255, 145, 200, 55, 20, 137, 167, 81, 86, 24, 57, 105, 130, 178, 159, 231, 178, 130, 102, 31, 149 },
+                            PasswordSalt = new byte[] { 18, 86, 149, 255, 25, 191, 176, 119, 205, 61, 159, 149, 122, 22, 139, 156, 173, 186, 91, 64, 194, 195, 226, 151, 242, 47, 148, 43, 245, 136, 79, 60, 209, 222, 162, 57, 163, 153, 93, 131, 205, 183, 121, 253, 13, 35, 229, 197, 105, 123, 51, 83, 59, 83, 122, 254, 170, 148, 52, 163, 54, 11, 22, 93, 231, 24, 112, 211, 206, 4, 114, 67, 107, 188, 242, 179, 239, 52, 57, 124, 115, 188, 132, 243, 252, 194, 141, 64, 199, 106, 71, 204, 176, 125, 164, 251, 40, 126, 101, 139, 235, 222, 131, 81, 113, 245, 8, 80, 16, 64, 86, 12, 79, 38, 147, 187, 45, 225, 53, 214, 190, 254, 21, 170, 27, 249, 214, 215 },
                             PhoneNumber = "9876543456",
                             Role = "Admin",
-                            UpdatedAt = new DateTime(2025, 2, 24, 7, 50, 39, 265, DateTimeKind.Utc).AddTicks(5582)
+                            UpdatedAt = new DateTime(2025, 2, 24, 6, 50, 16, 475, DateTimeKind.Utc).AddTicks(2941)
                         });
                 });
 

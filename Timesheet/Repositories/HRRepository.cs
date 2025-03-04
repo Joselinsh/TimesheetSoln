@@ -18,9 +18,18 @@ namespace Timesheet.Repositories
         public async Task<HR> GetByUserId(int userId)
         {
             return await _context.HRs
-                .Include(hr => hr.User) 
+                .Include(hr => hr.User)
                 .FirstOrDefaultAsync(hr => hr.UserId == userId);
         }
+
+        // In HRRepository.cs
+        public async Task<HR> GetHRByUserIdAsync(int userId)
+        {
+            return await _context.HRs
+                .Include(hr => hr.User) // Include related User entity
+                .FirstOrDefaultAsync(hr => hr.UserId == userId); // Find HR by UserId
+        }
+
 
     }
 

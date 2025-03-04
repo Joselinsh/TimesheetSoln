@@ -20,6 +20,7 @@ namespace Timesheet.Controllers
             _userRepository = userRepository;
         }
 
+
         [HttpPost("register")]
         [AllowAnonymous] 
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userregistrationDto)

@@ -6,7 +6,7 @@ namespace Timesheet.Models
     public class Employee
     {
         [Key]
-        public int Id { get; set; }
+        public int EmployeeId { get; set; }
 
         [Required]
         [ForeignKey("User")]

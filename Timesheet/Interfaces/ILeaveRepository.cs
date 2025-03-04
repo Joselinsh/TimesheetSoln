@@ -6,16 +6,24 @@ namespace Timesheet.Interfaces
 {
     public interface ILeaveRepository
     {
-        // Submit a new leave request
+        // ✅ Submit a new leave request
         Task<LeaveDb> SubmitLeaveRequest(LeaveDb leave);
 
-        // Get a leave request by its ID
+        // ✅ Get a leave request by its ID
         Task<LeaveDb> GetLeaveById(int leaveId);
 
-        // Get all leave requests for a specific employee
+        // ✅ Get all leave requests for a specific employee
         Task<List<LeaveDb>> GetLeavesByEmployeeId(int employeeId);
 
-        // Update leave request status (Approve/Reject)
-        Task UpdateLeaveRequest(LeaveDb leave);
+        
+           Task<List<LeaveDb>> GetPendingLeaveRequests();
+        
+
+
+        // ✅ Update leave request (Only if status is Pending)
+        Task<LeaveDb> UpdateLeaveRequest(LeaveDb leave);
+
+        // ✅ Delete leave request (Only if status is Pending)
+        Task<bool> DeleteLeaveRequest(int leaveId);
     }
 }

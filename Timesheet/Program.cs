@@ -1,9 +1,8 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using Timesheet.Data;
 using Timesheet.Interfaces;
 using Timesheet.Repositories;
@@ -18,17 +17,27 @@ namespace Timesheet
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Load configuration (ensure it's properly loaded)
+            // Load configuration
             var configuration = builder.Configuration;
 
-            // Add services to the container.
-
+            // Add services to the container (all before Build())
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            // Add CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularDev", builder =>
+                {
+                    builder.WithOrigins("http://localhost:4200")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
+
+            // Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
@@ -57,37 +66,39 @@ namespace Timesheet
                 });
             });
 
+            // Logging
             builder.Logging.AddLog4Net();
 
+            // Custom exception filter
             builder.Services.AddScoped<Misc.CustomExceptionFilter>();
 
+            // JWT Authentication
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-     .AddJwtBearer(options =>
-     {
-         options.TokenValidationParameters = new TokenValidationParameters
-         {
-             ValidateIssuerSigningKey = true,
-             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
-             ValidateIssuer = false,
-             ValidateAudience = false,
-             ClockSkew = TimeSpan.Zero
-         };
-     });
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
-            // Ensure the connection string is loaded correctly from appsettings.json
+            // Database context
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentNullException("Connection string 'DefaultConnection' is not set in appsettings.json.");
             }
-
             builder.Services.AddDbContext<TimesheetDbContext>(options =>
-      options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
 
-
-            // Register repository and services
+            // Register repositories and services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddTransient<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddTransient<IAuthService, AuthService>(); // Note: You had this twice; keeping Transient
             builder.Services.AddScoped<IRoleService, RoleService>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<ITimesheetRepository, TimesheetRepository>();
@@ -95,23 +106,23 @@ namespace Timesheet
             builder.Services.AddScoped<IHRRepository, HRRepository>();
             builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
             builder.Services.AddScoped<ILeaveService, LeaveService>();
+            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+            // Removed duplicate IAuthService registration
 
-
-            // Add Swagger for API documentation
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
+            // Build the app (after all services are registered)
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseHttpsRedirection();
+            app.UseCors("AllowAngularDev");
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
 
             app.Run();

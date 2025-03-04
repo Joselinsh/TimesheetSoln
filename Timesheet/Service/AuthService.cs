@@ -7,6 +7,7 @@ using System.Text;
 using Timesheet.Interfaces;
 using Timesheet.Models;
 using Timesheet.Models.DTO;
+using Timesheet.Repositories;
 
 namespace Timesheet.Services
 {
@@ -14,11 +15,18 @@ namespace Timesheet.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IHRRepository _HRRepository;
+        private readonly IAdminRepository _adminRepository;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IEmployeeRepository employeeRepository, IHRRepository hRRepository, IAdminRepository adminRepository)
         {
             _userRepository = userRepository;
             _configuration = configuration;
+            _employeeRepository = employeeRepository;
+            _HRRepository = hRRepository;
+            _adminRepository = adminRepository;
         }
 
         public async Task<UserRegistrationResponseDto> RegisterAsync(UserRegistrationDto userregistrationDto)
@@ -82,7 +90,8 @@ namespace Timesheet.Services
                 return new LoginResponseDto
                 {
                     Message = "Login successful, but role is not assigned. Please contact Admin.",
-                    Token = null
+                    Token = null,
+                    RoleId=user.Id
                 };
             }
 
@@ -99,7 +108,8 @@ namespace Timesheet.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                   
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+               
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -113,6 +123,26 @@ namespace Timesheet.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
             string jwtToken = tokenHandler.WriteToken(token);
 
+
+            int? roleId = null;
+            if (user.Role == "Employee")
+            {
+                var employee = await _employeeRepository.GetEmployeeByUserIdAsync(user.Id);
+                roleId = employee?.EmployeeId;
+            }
+
+
+            else if (user.Role == "HR")
+            {
+                var hr = await _HRRepository.GetHRByUserIdAsync(user.Id);
+                roleId = hr?.Id ?? 0; // If null, set to 0
+            }
+
+            else if (user.Role == "Admin") // Fetch Admin ID
+            {
+                var admin = await _adminRepository.GetAdminByUserIdAsync(user.Id);
+                roleId = admin?.Id ?? 0;
+            }
             // ✅ Ensure Role-Based Messages in Response
             string welcomeMessage = user.Role switch
             {
@@ -125,7 +155,8 @@ namespace Timesheet.Services
             return new LoginResponseDto
             {
                 Message = welcomeMessage,
-                Token = jwtToken
+                Token = jwtToken,
+                RoleId=roleId
             };
         }
     }
